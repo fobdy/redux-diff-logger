@@ -1,5 +1,7 @@
 // https://github.com/flitbit/diff#differences
-import differ from 'deep-diff';
+// import differ from 'deep-diff';
+import jsondiffpatch from 'jsondiffpatch';
+import { log } from './formatter.js';
 
 const dictionary = {
   E: {
@@ -48,19 +50,23 @@ function logger({ getState }) {
     const newState = getState();
     const time = new Date();
 
-    const diff = differ(prevState, newState);
+    // const diff = differ(prevState, newState);
+    const diff = jsondiffpatch.diff(prevState, newState);
 
-    console.group('diff @', `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`);
-    if (diff) {
-      diff.forEach((elem) => {
-        const { kind } = elem;
-        const output = render(elem);
+    console.group('%s @', action.type,
+      `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`);
+    log(diff);
+    // console.log(diff);
+    // if (diff) {
+    //   diff.forEach((elem) => {
+    //     const { kind } = elem;
+    //     const output = render(elem);
 
-        console.log(`%c ${dictionary[kind].text}`, style(kind), output);
-      });
-    } else {
-      console.log('—— no diff ——');
-    }
+    //     console.log(`%c ${dictionary[kind].text}`, style(kind), output);
+    //   });
+    // } else {
+    //   console.log('—— no diff ——');
+    // }
     console.groupEnd('diff');
 
     return returnValue;

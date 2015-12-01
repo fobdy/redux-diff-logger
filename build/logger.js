@@ -1,4 +1,5 @@
 // https://github.com/flitbit/diff#differences
+// import differ from 'deep-diff';
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -7,9 +8,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _deepDiff = require('deep-diff');
+var _jsondiffpatch = require('jsondiffpatch');
 
-var _deepDiff2 = _interopRequireDefault(_deepDiff);
+var _jsondiffpatch2 = _interopRequireDefault(_jsondiffpatch);
+
+var _formatterJs = require('./formatter.js');
 
 var dictionary = {
   E: {
@@ -50,7 +53,7 @@ function render(diff) {
     case 'D':
       return '' + path.join('.');
     case 'A':
-      return (path.join('.') + '[' + index + ']', item);
+      return path.join('.') + '[' + index + ']', item;
     default:
       return null;
   }
@@ -66,20 +69,22 @@ function logger(_ref) {
       var newState = getState();
       var time = new Date();
 
-      var diff = (0, _deepDiff2['default'])(prevState, newState);
+      // const diff = differ(prevState, newState);
+      var diff = _jsondiffpatch2['default'].diff(prevState, newState);
 
-      console.group('diff @', time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds());
-      if (diff) {
-        diff.forEach(function (elem) {
-          var kind = elem.kind;
+      console.group('%s @', action.type, time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds());
+      (0, _formatterJs.log)(diff);
+      // console.log(diff);
+      // if (diff) {
+      //   diff.forEach((elem) => {
+      //     const { kind } = elem;
+      //     const output = render(elem);
 
-          var output = render(elem);
-
-          console.log('%c ' + dictionary[kind].text, style(kind), output);
-        });
-      } else {
-        console.log('—— no diff ——');
-      }
+      //     console.log(`%c ${dictionary[kind].text}`, style(kind), output);
+      //   });
+      // } else {
+      //   console.log('—— no diff ——');
+      // }
       console.groupEnd('diff');
 
       return returnValue;

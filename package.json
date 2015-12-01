@@ -3,6 +3,7 @@
   "version": "0.0.6",
   "description": "Diff logger between states for redux",
   "main": "build/logger.js",
+  "jsnext:main": "src/logger.js",
   "scripts": {
     "test": "npm run lint",
     "clean": "$(npm bin)/rimraf build",
@@ -32,7 +33,7 @@
   },
   "homepage": "https://github.com/fcomb/redux-diff-logger#readme",
   "dependencies": {
-    "deep-diff": "^0.3.2"
+    "jsondiffpatch": "^0.1.37"
   },
   "devDependencies": {
     "babel": "^5.8.21",
